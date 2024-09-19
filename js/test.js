@@ -4,81 +4,121 @@ canvas.width = 300;
 canvas.height = 600;
 const backgroundImage = new Image();
 backgroundImage.src = "../image/823388313309606.jpg"; // Replace with your image path
-const imageSources = [
-  "../image/pngs/orange.png",
-  "../image/pngs/green-apple.png",
-];
+const imageSources = ["1", "2", " 3"];
 const images = [];
 const gravity = 0.2;
 const Fruitarr = [];
 const gif = new Image();
 let score = 0;
+const fruitsdata = [
+  {
+    name: "cherry",
+    level: 0,
+    size: 10,
+    color: "#FF0000",
+    img: "../image/pngs/black-cherry.png",
+  },
+  {
+    name: "seedy",
+    level: 1,
+    size: 15,
+    img: "../image/pngs/coconut.png",
+  },
+  {
+    name: "orange",
+    level: 2,
+    size: 20,
+    img: "../image/pngs/green-apple.png",
+  },
+  {
+    name: "lemon",
+    level: 3,
+    size: 30,
+    img: "../image/pngs/lemon.png",
+  },
 
-let x = canvas.width / 2;
-// Tạo các đối tượng vật lý
-// Xử lý sự kiện khi nhấn phím Space
-document.addEventListener("keydown", (event) => {
-  if (event.code === "Space") {
-    // Kiểm tra nếu phím nhấn là Space
-    const rect = canvas.getBoundingClientRect();
-    const xrandom = Math.random(); // Sử dụng random thay cho clientX (không có vị trí chuột trong sự kiện keydown)
-    const randomIndex = Math.floor(Math.random() * imageSources.length);
-    let lengtimg = fruitsdata[randomIndex].size;
-
-    Fruitarr.push(new Fruit(x + xrandom, 100 - lengtimg, randomIndex, "new"));
-  }
-  if (event.code === "ArrowL eft") {
-    x -= 20;
-  }
-  if (event.code === "ArrowRight") {
-    x += 20;
+  {
+    name: "kiwi",
+    level: 4,
+    size: 40,
+    img: "../image/pngs/peach.png",
+  },
+];
+let currentFruit;
+canvas.addEventListener("click", (event) => {
+  createFirstFruit();
+  console.log(Fruitarr);
+  for (fruit of Fruitarr) {
+    if (fruit.stt == Fruitarr.length - 2) {
+      fruit.falling = true;
+    }
   }
 });
-
+canvas.addEventListener("mousemove", (event) => {
+  const rect = canvas.getBoundingClientRect();
+  mouseX = event.clientX - rect.left;
+});
 function update() {
   if (Fruitarr.length >= 2) {
     handleCollision(Fruitarr);
   }
 
-  for (const body of Fruitarr) {
-    body.update(gravity);
+  for (const fruit of Fruitarr) {
+    checkEdge(fruit);
+    fruit.update(gravity);
   }
 }
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  if (backgroundImage.complete) {
-    ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
-  } else {
-    // Optionally handle the case where the image is still loading
-    backgroundImage.onload = function () {
-      ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
-    };
+
+  for (const fruit of Fruitarr) {
+    fruit.draw(ctx);
   }
+}
+function createFirstFruit() {
+  const xrandom = Math.random();
+  const randomIndex = Math.floor(Math.random() * imageSources.length);
+  let lengtimg = fruitsdata[randomIndex].size;
 
-  for (const body of Fruitarr) {
-    body.draw(ctx);
-  }
-  ctx.font = "20px Arial"; // Kích thước và kiểu chữ
-  ctx.fillStyle = "black"; // Màu chữ
-  ctx.textAlign = "left"; // Canh lề chữ
-  ctx.textBaseline = "top"; // Căn chỉnh chữ từ trên xuống
-
-  // Vẽ dòng điểm số
-  ctx.fillText(`Score: ${score}`, 10, 10); // X, Y là vị trí điểm số
-
-  // Vẽ đường ngang (đường mốc)
-  ctx.beginPath();
-  ctx.moveTo(0, 100); // Điểm bắt đầu của đường
-  ctx.lineTo(ctx.canvas.width, 100); // Điểm kết thúc của đường
-  ctx.strokeStyle = "red"; // Màu đường
-  ctx.lineWidth = 2; // Độ dày đường
-  ctx.stroke(); // Vẽ đường
-  ctx.closePath();
+  let fruitnew = new Fruit(
+    canvas.width / 2 + xrandom,
+    100 - lengtimg,
+    randomIndex,
+    Fruitarr.length,
+    false
+  );
+  Fruitarr.push(fruitnew);
+  return fruitnew;
 }
 
+window.addEventListener("load", createFirstFruit);
 function animate() {
   update();
   draw();
   requestAnimationFrame(animate);
 }
 animate();
+
+// ctx.font = "20px Arial"; // Kích thước và kiểu chữ
+//   ctx.fillStyle = "black"; // Màu chữ
+//   ctx.textAlign = "left"; // Canh lề chữ
+//   ctx.textBaseline = "top"; // Căn chỉnh chữ từ trên xuống
+
+//   // Vẽ dòng điểm số
+//   ctx.fillText(`Score: ${score}`, 10, 10); // X, Y là vị trí điểm số
+
+//   ctx.beginPath();
+//   ctx.moveTo(0, 100);
+//   ctx.lineTo(ctx.canvas.width, 100);
+//   ctx.strokeStyle = "red";
+//   ctx.lineWidth = 2;
+//   ctx.stroke();
+//   ctx.closePath();
+// if (backgroundImage.complete) {
+//   ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+// } else {
+//   // Optionally handle the case where the image is still loading
+//   backgroundImage.onload = function () {
+//     ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+//   };
+// }
