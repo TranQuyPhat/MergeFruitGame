@@ -57,6 +57,11 @@ canvas.addEventListener("click", (event) => {
 canvas.addEventListener("mousemove", (event) => {
   const rect = canvas.getBoundingClientRect();
   mouseX = event.clientX - rect.left;
+  for (fruit of Fruitarr) {
+    if (fruit.stt == Fruitarr.length - 1) {
+      fruit.x = mouseX;
+    }
+  }
 });
 function update() {
   if (Fruitarr.length >= 2) {
