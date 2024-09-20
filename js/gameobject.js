@@ -1,5 +1,5 @@
 class Fruit {
-  constructor(x, y, type, stt,status) {
+  constructor(x, y, type, stt, status) {
     this.x = x;
     this.y = y;
     this.type = type;
@@ -17,8 +17,9 @@ class Fruit {
     this.dy = 0;
     this.ax = 0;
     this.ay = 0;
-    this.mass = 1;
-    this.restitution = 0.8;
+    this.mass = data.mass;
+
+    this.restitution = 0.5;
     this.friction = 0.98;
     this.image = new Image();
     this.image.src = this.imgSrc;
@@ -36,9 +37,7 @@ class Fruit {
       );
     }
   }
-
   update(gravity) {
-    // Chỉ cập nhật vị trí nếu quả đang rơi
     if (this.falling) {
       this.ax = 0;
       this.ay = gravity;
@@ -50,6 +49,4 @@ class Fruit {
       this.dy *= this.friction;
     }
   }
-
-  // Va chạm với đối tượng khác
 }
